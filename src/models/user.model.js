@@ -22,7 +22,14 @@ const User = sequelize.define('User', {
 }, 
 {
   tableName: 'users',
-  timestamps: false
+  timestamps: false,
+  defaultScope: {
+    attributes: { exclude: ['password'] }
+  },
+  scopes: {
+    // Only for the login flow, where the password must be read to compare it.
+    withPassword: { attributes: { include: ['password'] } }
+  }
 });
  
 module.exports = User;

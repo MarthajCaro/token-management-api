@@ -14,7 +14,7 @@ const setupSwagger = require('./swagger');
 
 app.use(express.json());
 
-app.use('/api/auth/token', authTokenRoute); 
+app.use('/api/auth', authTokenRoute); 
 app.use('/api/users', usersRouter); 
 app.use('/api/services', serviceRoutes);
 app.use('/api/tokens', tokenRoutes);
