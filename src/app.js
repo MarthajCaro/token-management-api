@@ -7,12 +7,29 @@ const usersRouter=require('./routes/user.routes');
 const serviceRoutes = require('./routes/service.routes');
 const tokenRoutes = require('./routes/token.routes');
 const app = express();
-app.use(cors({ origin: 'http://localhost:4200' }));
-const PORT = 3000;
+
+// CORS: accepts a comma-separated list of origins in CORS_ORIGIN.
+// Use "*" to allow any origin (useful for local development).
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:4200')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins.includes('*') ? true : allowedOrigins
+  })
+);
+const PORT = process.env.PORT || 3000;
 
 const setupSwagger = require('./swagger');
 
 app.use(express.json());
+
+// Health check used by Render to know when the service is up.
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
 
 app.use('/api/auth', authTokenRoute); 
 app.use('/api/users', usersRouter); 
